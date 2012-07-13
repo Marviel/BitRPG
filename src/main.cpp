@@ -6,19 +6,19 @@
 
 #include "Application.h"
 #include "Exception.h"
-#include "AssetManager.h"
 
 #include <iostream>
 
-using namespace std;
 using namespace bit;
+using namespace std;
 
 
 int main(int argc, const char *argv[])
 {
 	try
 	{
-		AssetManagerPtr assetManager(new AssetManager);
+		ApplicationPtr app(new Application());
+		app->start();
 	}
 	catch (Exception &e)
 	{

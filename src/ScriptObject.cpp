@@ -12,7 +12,7 @@
 
 using namespace bit;
 using namespace v8;
-using std::string;
+using namespace std;
 
 
 Local<Object> ScriptObject::getEmptyObject()

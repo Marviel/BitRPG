@@ -1,0 +1,18 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "folder_exclude_patterns": ["CMakeFiles"],
+            "file_exclude_patterns": ["Makefile", "cmake_install.cmake"]
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 4
+    },
+    "build_systems":
+    [
+    ]
+}
+
