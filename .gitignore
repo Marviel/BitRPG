@@ -1,0 +1,23 @@
+
+# CMake generated files
+
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# IDE files
+
+*.sublime-workspace
+
+# Operating system junk
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
