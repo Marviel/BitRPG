@@ -75,6 +75,29 @@ void ScriptManager::registerObject(ScriptObject *scriptObject, string name)
 }
 
 
+void ScriptManager::runScript(const std::string &source)
+{
+	HandleScope handleScope;
+	TryCatch tryCatch;
+	
+	// Compile script
+	
+	Local<String> sourceString = String::New(source.c_str());
+	Local<Script> script = Script::Compile(sourceString);
+	
+	catchError(tryCatch);
+	
+	if (script.IsEmpty())
+		throw bit::Exception("Script did not compile");
+	
+	// Run script
+	
+	script->Run();
+	
+	catchError(tryCatch);
+}
+
+
 string ScriptManager::evaluate(const string &statement)
 {
 	HandleScope handleScope;
@@ -82,8 +105,8 @@ string ScriptManager::evaluate(const string &statement)
 	
 	// Compile statement
 	
-	Handle<String> source = String::New(statement.c_str());
-	Handle<Script> script = Script::Compile(source);
+	Local<String> source = String::New(statement.c_str());
+	Local<Script> script = Script::Compile(source);
 	
 	catchError(tryCatch);
 	

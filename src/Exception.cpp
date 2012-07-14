@@ -20,10 +20,6 @@ Exception::Exception() throw()
 Exception::Exception(std::string message) throw()
 {
 	this->message = message;
-	
-	// Quick method to debug exception
-	
-	assert(false);
 }
 
 

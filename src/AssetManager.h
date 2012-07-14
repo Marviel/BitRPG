@@ -10,6 +10,7 @@
 #include "BitRPG.h"
 #include <string>
 #include <map>
+#include <boost/filesystem.hpp>
 
 
 namespace bit
@@ -19,15 +20,16 @@ namespace bit
 	public:
 		AssetManager();
 		
-		sf::ImagePtr loadImage(std::string filename);
-		sf::TexturePtr loadTexture(std::string filename,
-							   const sf::IntRect &area=sf::IntRect());
+		sf::ImagePtr loadImage(const std::string &filename);
+		sf::TexturePtr loadTexture(const std::string &filename,
+			const sf::IntRect &area=sf::IntRect());
 		
-		std::string loadFile(std::string filename);
+		std::string loadText(const std::string &filename);
 		
 	private:
+		std::string getAbsoluteFilename(const std::string &filename);
 		
-		std::string resourcePath;
+		boost::filesystem::path resourcePath;
 		
 		std::map<std::string, sf::ImagePtr> images;
 	};

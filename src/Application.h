@@ -31,7 +31,7 @@ namespace bit
 		
 	private:
 		void initScriptObjects();
-		void loadConfig();
+		void loadConfigFiles();
 	};
 }
 

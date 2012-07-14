@@ -4,8 +4,8 @@
  *
  */
 
-#ifndef ScriptManager_H_
-#define ScriptManager_H_
+#ifndef BitRPG_ScriptManager_h
+#define BitRPG_ScriptManager_h
 
 #include "BitRPG.h"
 
@@ -28,6 +28,7 @@ namespace bit
 		
 		void registerObject(ScriptObject *scriptObject, std::string name);
 		
+		void runScript(const std::string &source);
 		std::string evaluate(const std::string &statement);
 		JSONValue parseJSON(const std::string &data);
 		std::string toJSON(const JSONValue &value);

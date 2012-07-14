@@ -32,7 +32,7 @@ Application::Application()
 void Application::start()
 {
 	initScriptObjects();
-	loadConfig();
+	loadConfigFiles();
 	
 	// TEMP
 	
@@ -54,7 +54,7 @@ void Application::initScriptObjects()
 }
 
 
-void Application::loadConfig()
+void Application::loadConfigFiles()
 {
 	// Load config.json into configValue
 	
