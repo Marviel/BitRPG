@@ -1,4 +1,9 @@
 
+# Generated folders
+
+!/bin
+!/docs
+
 # CMake generated files
 
 CMakeCache.txt

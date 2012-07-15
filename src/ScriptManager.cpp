@@ -27,7 +27,6 @@ ScriptManager::ScriptManager()
 	context = Context::New();
 	context->Enter();
 	
-	contextScope = new Context::Scope(context);
 	Local<Object> global = context->Global();
 	
 	// Grab the JSON.parse() function
@@ -57,7 +56,6 @@ ScriptManager::~ScriptManager()
 	jsonParse.Dispose();
 	jsonStringify.Dispose();
 	
-	delete contextScope;
 	context.Dispose();
 }
 
@@ -105,7 +103,7 @@ void ScriptManager::runScript(const std::string &source)
 	Local<String> sourceString = String::New(source.c_str());
 	Local<Script> script = Script::Compile(sourceString);
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 	
 	if (script.IsEmpty())
 		throw bit::Exception("Script could not compile");
@@ -114,7 +112,7 @@ void ScriptManager::runScript(const std::string &source)
 	
 	script->Run();
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 }
 
 
@@ -128,7 +126,7 @@ string ScriptManager::evaluate(const string &statement)
 	Local<String> source = String::New(statement.c_str());
 	Local<Script> script = Script::Compile(source);
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 	
 	if (script.IsEmpty())
 		throw bit::Exception("Script did not compile");
@@ -137,7 +135,7 @@ string ScriptManager::evaluate(const string &statement)
 	
 	Handle<Value> result = script->Run();
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 	
 	if (result->IsUndefined())
 	{
@@ -172,7 +170,7 @@ JSONValue ScriptManager::parseJSON(const string &data)
 	Handle<Value> args[] = { String::New(data.c_str()) };
 	Local<Value> result = jsonParse->Call(context->Global(), 1, args);
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 	
 	// Contruct root JSONValue
 	
@@ -182,17 +180,21 @@ JSONValue ScriptManager::parseJSON(const string &data)
 }
 
 
-string ScriptManager::toJSON(const JSONValue &value)
+string ScriptManager::toJSON(const JSONValue &value, bool pretty)
 {
 	HandleScope handleScope;
 	TryCatch tryCatch;
 	
+	// Set the 'space' argument if the JSON needs to be prettified
+	
+	Handle<Value> spaceArg = pretty ? String::New("\t") : Undefined();
+	
 	// Call the JSON.stringify() function
 	
-	Handle<Value> args[] = { value.value };
-	Local<Value> resultValue = jsonStringify->Call(context->Global(), 1, args);
+	Handle<Value> args[] = { value.value, Undefined(), spaceArg };
+	Local<Value> resultValue = jsonStringify->Call(context->Global(), 3, args);
 	
-	catchError(tryCatch);
+	catchException(tryCatch);
 	
 	// Return string
 	
@@ -202,7 +204,7 @@ string ScriptManager::toJSON(const JSONValue &value)
 }
 
 
-void ScriptManager::catchError(const TryCatch &tryCatch)
+void ScriptManager::catchException(const TryCatch &tryCatch)
 {
 	// Check if an error has occurred
 	

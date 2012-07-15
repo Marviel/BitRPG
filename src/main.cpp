@@ -13,8 +13,10 @@
 #include "ConsoleObject.h"
 #include "ScriptException.h"
 #include "ItemObject.h"
+#include "JSONValue.h"
 
 #include <iostream>
+#include <string>
 
 using namespace bit;
 using namespace std;
@@ -25,10 +27,21 @@ int main(int argc, const char *argv[])
 	AssetManagerPtr assetManager(new AssetManager());
 	ScriptManagerPtr scriptManager(new ScriptManager());
 	
-	ConsoleObject console;
+	try
+	{
+		JSONValue value = scriptManager->parseJSON("{\"a\": 6, \"names\": [\"Bernie\", \"William\"]}");
+		cout << scriptManager->toJSON(value, true) << endl;
+	}
+	catch (Exception &e)
+	{
+		cout << e.what() << endl;
+	}
+	
+	/*ConsoleObject console;
 	scriptManager->registerObject(&console, "console");
 	
 	scriptManager->registerClass(ItemObject::constructor, "Item");
+	*/
 	
 	/*
 	try
@@ -42,7 +55,7 @@ int main(int argc, const char *argv[])
 	*/
 	
 	
-	
+	/*
 	while (true)
 	{
 		string statement;
@@ -63,7 +76,7 @@ int main(int argc, const char *argv[])
 			cout << "bit::ScriptException" << endl;
 		}
 	}
-	
+	*/
 	
 	
 	/*

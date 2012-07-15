@@ -28,7 +28,10 @@ bool ScriptObject::extractBoolean(const Arguments &args, int index)
 	Handle<BooleanObject> argBoolean = Handle<BooleanObject>::Cast(argValue);
 	
 	if (argBoolean.IsEmpty())
-		throw bit::Exception("Argument is not a Boolean object");
+	{
+		Local<String> message = String::New("Argument is not a Boolean object");
+		throw ScriptException(v8::Exception::SyntaxError(message));
+	}
 	
 	return argBoolean->BooleanValue();
 }
@@ -49,7 +52,10 @@ int64_t ScriptObject::extractInteger(const Arguments &args, int index)
 	Handle<Integer> argInteger = Handle<Integer>::Cast(argValue);
 	
 	if (argInteger.IsEmpty())
-		throw bit::Exception("Argument is not an Integer object");
+	{
+		Local<String> message = String::New("Argument is not an Integer object");
+		throw ScriptException(v8::Exception::SyntaxError(message));
+	}
 	
 	return argInteger->Value();
 }
@@ -70,7 +76,10 @@ double ScriptObject::extractDouble(const Arguments &args, int index)
 	Handle<Number> argNumber = Handle<Number>::Cast(argValue);
 	
 	if (argNumber.IsEmpty())
-		throw bit::Exception("Argument is not a Number object");
+	{
+		Local<String> message = String::New("Argument is not a Number object");
+		throw ScriptException(v8::Exception::SyntaxError(message));
+	}
 	
 	return argNumber->Value();
 }
@@ -86,7 +95,10 @@ string ScriptObject::extractString(const Arguments &args, int index)
 	Handle<String> argString = Handle<String>::Cast(argValue);
 	
 	if (argString.IsEmpty())
-		throw bit::Exception("Argument is not a String object");
+	{
+		Local<String> message = String::New("Argument is not a String object");
+		throw ScriptException(v8::Exception::SyntaxError(message));
+	}
 	
 	// Create Utf8 encoded string
 	

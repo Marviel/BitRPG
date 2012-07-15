@@ -16,6 +16,13 @@ namespace bit
 	class ScriptObject
 	{
 	public:
+		/**
+		 * Returns a new V8 object with class-specific properties
+		 *
+		 * The return object contains a pointer to this ScriptObject instance,
+		 * references to all static functions meant to be called from a
+		 * V8 context, and any inherited and prototype templates.
+		 */
 		virtual v8::Local<v8::Object> createInstance() =0;
 		
 	protected:
