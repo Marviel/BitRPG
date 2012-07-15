@@ -16,19 +16,9 @@ namespace bit
 	class ScriptObject
 	{
 	public:
-		virtual v8::Local<v8::Object> getObject() =0;
+		virtual v8::Local<v8::Object> createInstance() =0;
 		
 	protected:
-		v8::Local<v8::Object> getEmptyObject();
-		
-		/**
-		 * Convenience function for filling C++ types with V8 argument values
-		 */
-		/*
-		static void extractArguments(const v8::Arguments &args,
-			const std::string format, ...);
-		*/
-		
 		static bool extractBoolean(const v8::Arguments &args, int index);
 		static int64_t extractInteger(const v8::Arguments &args, int index);
 		static double extractDouble(const v8::Arguments &args, int index);
@@ -43,8 +33,8 @@ namespace bit
 		static void *extractHolder(const v8::Arguments &args);
 		
 	private:
-		static v8::Local<v8::Value> extractArgument(const v8::Arguments &args,
-			int index);
+		static v8::Handle<v8::Value> extractArgument(
+			const v8::Arguments &args, int index);
 	};
 }
 

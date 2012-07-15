@@ -25,6 +25,8 @@ ScriptManager::ScriptManager()
 	HandleScope handleScope;
 	
 	context = Context::New();
+	context->Enter();
+	
 	contextScope = new Context::Scope(context);
 	Local<Object> global = context->Global();
 	
@@ -68,9 +70,27 @@ void ScriptManager::registerObject(ScriptObject *scriptObject, string name)
 	
 	// Make the object a global in the V8 context
 	
-	Local<Object> obj = scriptObject->getObject();
+	Local<Object> obj = scriptObject->createInstance();
 	global->Set(String::New(name.c_str()), obj);
 	
+	context->ReattachGlobal(global);
+}
+
+
+void ScriptManager::registerClass(InvocationCallback constructor, std::string name)
+{
+	HandleScope handleScope;
+	
+	// Create a V8 function from the constructor callback function
+	
+	Local<FunctionTemplate> constructorTemplate = FunctionTemplate::New(constructor);
+	Local<Function> constructorFunction = constructorTemplate->GetFunction();
+	
+	// Make the constructor function a global
+	
+	Local<Object> global = context->Global();
+	
+	global->Set(String::New(name.c_str()), constructorFunction);
 	context->ReattachGlobal(global);
 }
 
@@ -88,7 +108,7 @@ void ScriptManager::runScript(const std::string &source)
 	catchError(tryCatch);
 	
 	if (script.IsEmpty())
-		throw bit::Exception("Script did not compile");
+		throw bit::Exception("Script could not compile");
 	
 	// Run script
 	
@@ -190,11 +210,11 @@ void ScriptManager::catchError(const TryCatch &tryCatch)
 	{
 		HandleScope handleScope;
 		
+		// Throw an exception with the TryCatch message
+		
 		Local<Message> message = tryCatch.Message();
-		*message;
 		Local<String> messageString = message->Get();
 		String::Utf8Value messageUtf(messageString);
 		throw bit::Exception(*messageUtf);
 	}
 }
-

@@ -11,7 +11,8 @@
 #include "AssetManager.h"
 #include "ScriptManager.h"
 #include "ConsoleObject.h"
-#include "ScriptTemplate.h"
+#include "ScriptException.h"
+#include "ItemObject.h"
 
 #include <iostream>
 
@@ -24,17 +25,45 @@ int main(int argc, const char *argv[])
 	AssetManagerPtr assetManager(new AssetManager());
 	ScriptManagerPtr scriptManager(new ScriptManager());
 	
+	ConsoleObject console;
+	scriptManager->registerObject(&console, "console");
+	
+	scriptManager->registerClass(ItemObject::constructor, "Item");
+	
+	/*
 	try
 	{
-		ConsoleObject console;
-		scriptManager->registerObject(&console, "console");
-		
 		scriptManager->runScript(assetManager->loadText("script.js"));
 	}
 	catch (bit::Exception &e)
 	{
-		cout << e.what() << endl;
+		cout << "bit::Exception: " << e.what() << endl;
 	}
+	*/
+	
+	
+	
+	while (true)
+	{
+		string statement;
+		
+		cout << "> ";
+		getline(cin, statement);
+		
+		try
+		{
+			scriptManager->evaluate(statement);
+		}
+		catch (Exception &e)
+		{
+			cout << "bit::Exception: " << e.what() << endl;
+		}
+		catch (ScriptException &e)
+		{
+			cout << "bit::ScriptException" << endl;
+		}
+	}
+	
 	
 	
 	/*

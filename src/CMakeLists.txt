@@ -33,10 +33,14 @@ add_executable(BitRPG
 	Exception.cpp Exception.h
 #	Application.cpp Application.h
 	AssetManager.cpp AssetManager.h
+	
 	ScriptManager.cpp ScriptManager.h
 	ScriptObject.cpp ScriptObject.h
+#	ScriptClass.cpp ScriptClass.h
+	ItemObject.cpp ItemObject.h
+	
 	ConsoleObject.cpp ConsoleObject.h
-	ScriptTemplate.cpp ScriptTemplate.h
+	ScriptException.cpp ScriptException.h
 #	DisplayManager.cpp DisplayManager.h
 #	StateManager.cpp StateManager.h
 #	Entity.cpp Entity.h

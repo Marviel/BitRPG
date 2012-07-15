@@ -9,10 +9,11 @@
     ],
     "settings":
     {
-        "tab_size": 4
+        "tab_size": 4,
+        "sublimegdb_workingdir": ".",
+        "sublimegdb_commandline": "gdb --interpreter=mi ./bin/BitRPG"
     },
     "build_systems":
     [
     ]
 }
-

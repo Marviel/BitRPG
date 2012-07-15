@@ -27,6 +27,7 @@ namespace bit
 		~ScriptManager();
 		
 		void registerObject(ScriptObject *scriptObject, std::string name);
+		void registerClass(v8::InvocationCallback constructor, std::string name);
 		
 		void runScript(const std::string &source);
 		std::string evaluate(const std::string &statement);

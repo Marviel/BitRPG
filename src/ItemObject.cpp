@@ -4,24 +4,29 @@
  *
  */
 
-#include "ConsoleObject.h"
+#include "ItemObject.h"
 #include "ScriptException.h"
- 
-#include <iostream>
+
+#include <v8.h>
 
 using namespace bit;
 using namespace v8;
-using namespace std;
 
 
-Local<Object> ConsoleObject::createInstance()
+ItemObject::ItemObject()
+{
+	printf("ItemObject::ItemObject\n");
+}
+
+
+Local<Object> ItemObject::createInstance()
 {
 	HandleScope handleScope;
 	
 	// Create the function template
 	
 	Local<FunctionTemplate> functionTemplate = FunctionTemplate::New();
-	functionTemplate->SetClassName(String::New("Console"));
+	functionTemplate->SetClassName(String::New("Item"));
 	
 	// Create the object template
 	
@@ -35,6 +40,7 @@ Local<Object> ConsoleObject::createInstance()
 	
 	// Add functions to object instance
 	
+	/*
 	Local<FunctionTemplate> printTemplate = FunctionTemplate::New(print);
 	Local<Function> printFunction = printTemplate->GetFunction();
 	objectInstance->Set(String::New("print"), printFunction);
@@ -42,46 +48,29 @@ Local<Object> ConsoleObject::createInstance()
 	Local<FunctionTemplate> inputTemplate = FunctionTemplate::New(input);
 	Local<Function> inputFunction = inputTemplate->GetFunction();
 	objectInstance->Set(String::New("input"), inputFunction);
+	*/
 	
 	return handleScope.Close(objectInstance);
 }
 
 
-Handle<Value> ConsoleObject::print(const Arguments &args)
+Handle<Value> ItemObject::constructor(const Arguments &args)
 {
 	HandleScope handleScope;
 	
-	string message;
+	// Make sure the constructor is called with the new keyword
 	
-	try
+	if (!args.IsConstructCall())
 	{
-		message = ScriptObject::extractString(args, 0);
-	}
-	catch (ScriptException &e)
-	{
-		return e.getException();
+		Local<String> message = String::New("Cannot call constructor as a function");
+		return ThrowException(Exception::SyntaxError(message));
 	}
 	
-	// Print the string with a newline at the end
+	// Instantiate a new ScriptTemplate
 	
-	cout << message << endl;
+	ItemObject *itemObject = new ItemObject();
+	Local<Object> itemInstance = itemObject->createInstance();
+	itemInstance->SetInternalField(0, External::New(itemObject));
 	
-	return Undefined();
-}
-
-
-Handle<Value> ConsoleObject::input(const Arguments &args)
-{
-	HandleScope handleScope;
-	
-	// Query the user for a line of console input
-	
-	string result;
-	getline(cin, result);
-	
-	// Create the V8 string and return it
-	
-	Local<String> resultString = String::New(result.c_str());
-	
-	return handleScope.Close(resultString);
+	return handleScope.Close(itemInstance);
 }

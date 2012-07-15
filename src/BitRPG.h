@@ -22,6 +22,7 @@ namespace bit
 	class JSONValue;
 	class MapLayer;
 	class ScriptObject;
+	class ScriptClass;
 	
 	class MapTile;
 	
