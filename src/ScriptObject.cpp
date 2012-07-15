@@ -9,6 +9,7 @@
 
 #include <stdarg.h>
 #include <sstream>
+#include <string>
 
 using namespace bit;
 using namespace v8;
@@ -33,7 +34,8 @@ Local<Object> ScriptObject::getEmptyObject()
 }
 
 
-void ScriptObject::extractArguments(const Arguments &args, string format, ...)
+/*
+void ScriptObject::extractArguments(const Arguments &args, const string format, ...)
 {
 	int argLength = args.Length();
 	
@@ -67,7 +69,7 @@ void ScriptObject::extractArguments(const Arguments &args, string format, ...)
 		char type = format.at(i);
 		Local<Value> argument = args[i];
 		
-		// Integer
+		// 32-bit integer
 		
 		if (type == 'i')
 		{
@@ -80,7 +82,7 @@ void ScriptObject::extractArguments(const Arguments &args, string format, ...)
 			*val = intArgument->Int32Value();
 		}
 		
-		// Float
+		// Double floating point
 		
 		else if (type == 'f')
 		{
@@ -93,7 +95,7 @@ void ScriptObject::extractArguments(const Arguments &args, string format, ...)
 			*val = floatArgument->NumberValue();
 		}
 		
-		// String
+		// C++ string
 		
 		else if (type == 's')
 		{
@@ -108,31 +110,109 @@ void ScriptObject::extractArguments(const Arguments &args, string format, ...)
 		}
 	}
 }
+*/
 
 
-void *ScriptObject::getThis(const Arguments &args)
+bool ScriptObject::extractBoolean(const Arguments &args, int index)
+{
+	HandleScope handleScope;
+	
+	// Get Boolean value
+	
+	Local<Value> argValue = ScriptObject::extractArgument(args, index);
+	Local<BooleanObject> argBoolean = Local<BooleanObject>::Cast(argValue);
+	
+	if (argBoolean.IsEmpty())
+		throw new bit::Exception("Argument is not a Boolean object");
+	
+	return argBoolean->BooleanValue();
+}
+
+
+int64_t ScriptObject::extractInteger(const Arguments &args, int index)
+{
+	HandleScope handleScope;
+	
+	// Get Integer value
+	
+	Local<Value> argValue = ScriptObject::extractArgument(args, index);
+	Local<Integer> argInteger = Local<Integer>::Cast(argValue);
+	
+	if (argInteger.IsEmpty())
+		throw new bit::Exception("Argument is not an Integer object");
+	
+	return argInteger->Value();
+}
+
+
+double ScriptObject::extractDouble(const Arguments &args, int index)
+{
+	HandleScope handleScope;
+	
+	// Get Number value
+	
+	Local<Value> argValue = ScriptObject::extractArgument(args, index);
+	Local<Number> argNumber = Local<Number>::Cast(argValue);
+	
+	if (argNumber.IsEmpty())
+		throw new bit::Exception("Argument is not a Number object");
+	
+	return argNumber->Value();
+}
+
+
+string ScriptObject::extractString(const Arguments &args, int index)
+{
+	HandleScope handleScope;
+	
+	// Get String value
+	
+	Local<Value> argValue = ScriptObject::extractArgument(args, index);
+	Local<String> argString = Local<String>::Cast(argValue);
+	
+	if (argString.IsEmpty())
+		throw new bit::Exception("Argument is not a String object");
+	
+	// Create Utf8 encoded string
+	
+	String::Utf8Value argUtfString(argString);
+	
+	return string(*argUtfString);
+}
+
+
+void *ScriptObject::extractHolder(const Arguments &args)
 {
 	HandleScope handleScope;
 	
 	// Extract first internal field from Argument's holder object
 	
 	Local<Object> holderObject = args.Holder();
-	Local<Value> thisValue = holderObject->GetInternalField(0);
+	Local<Value> holderValue = holderObject->GetInternalField(0);
 	
-	if (thisValue.IsEmpty())
+	if (holderValue.IsEmpty())
 		throw bit::Exception("No internal fields found in holder object");
 	
-	if (!thisValue->IsExternal())
+	if (!holderValue->IsExternal())
 		throw bit::Exception("The first field of holder object is not an ExternalObject");
 	
 	// Extract void pointer
 	
-	void *thisPointer = External::Unwrap(thisValue);
+	void *holderPointer = External::Unwrap(holderValue);
 	
-	if (thisPointer == NULL)
+	if (holderPointer == NULL)
 		throw bit::Exception("Extracted pointer is null");
 	
-	return thisPointer;
+	return holderPointer;
 }
 
 
+Local<Value> ScriptObject::extractArgument(const Arguments &args, int index)
+{
+	if (index >= args.Length())
+		throw new bit::Exception("Argument index out of bounds");
+	
+	// Get value
+	
+	return args[index];
+}

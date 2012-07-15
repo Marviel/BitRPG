@@ -1,7 +1,8 @@
 
 # SFML library
 
-find_package(SFML 2 REQUIRED COMPONENTS system window graphics)
+set(SFML_STATIC_LIBRARIES TRUE)
+find_package(SFML 2 COMPONENTS system window graphics REQUIRED)
 
 include_directories(${SFML_INCLUDE_DIR})
 #link_directories(${SFML_LIBRARIES})
@@ -19,7 +20,7 @@ include_directories(${V8_INCLUDE_DIR})
 
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost 1.36.0 REQUIRED COMPONENTS system filesystem)
+find_package(Boost 1.36.0 COMPONENTS system filesystem REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -34,6 +35,8 @@ add_executable(BitRPG
 	AssetManager.cpp AssetManager.h
 	ScriptManager.cpp ScriptManager.h
 	ScriptObject.cpp ScriptObject.h
+	ConsoleObject.cpp ConsoleObject.h
+	ScriptTemplate.cpp ScriptTemplate.h
 #	DisplayManager.cpp DisplayManager.h
 #	StateManager.cpp StateManager.h
 #	Entity.cpp Entity.h

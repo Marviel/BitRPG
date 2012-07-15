@@ -11,9 +11,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <unistd.h>
-#include <iostream>
-
 using namespace bit;
 using namespace sf;
 using namespace std;

@@ -10,6 +10,8 @@
 #include "BitRPG.h"
 #include "AssetManager.h"
 #include "ScriptManager.h"
+#include "ConsoleObject.h"
+#include "ScriptTemplate.h"
 
 #include <iostream>
 
@@ -24,6 +26,9 @@ int main(int argc, const char *argv[])
 	
 	try
 	{
+		ConsoleObject console;
+		scriptManager->registerObject(&console, "console");
+		
 		scriptManager->runScript(assetManager->loadText("script.js"));
 	}
 	catch (bit::Exception &e)
